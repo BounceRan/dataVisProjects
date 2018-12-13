@@ -1,2 +1,2 @@
 # dataVisProjects
-#contain different project
+#contain visualization projects
