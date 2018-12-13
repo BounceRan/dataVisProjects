@@ -78,7 +78,7 @@ countAvHours();
 
  function draw(){
 
-background('#f7f7f7');
+background('#e4dfdf');
   forday.display();
   //testp.display();
 
