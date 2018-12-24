@@ -5,7 +5,25 @@ var aadata2=[{"mtgaddress":"411 E 12TH ST, New York, NY","mtspin":"Sponsorship W
 var aadata=[];
 
 aadata=aadata2;
+var daycheck=[ "Monday", "Tuesday","Wednesday","Thursday", "Friday", "Saturday", "Sunday"];
 
+function clock(){
+var timenow = moment().tz('America/New_York').format("dddd, h:mm:ss a");
+
+document.getElementById('time').innerHTML=timenow  ;
+
+ setTimeout(clock, 1000);
+};
+
+clock();
+
+
+function searchresult(rdate){
+document.getElementById('time').innerHTML= '<br> AA search result for: ' + rdate
+
+}
+
+//console.log(timenow);
 
 var latitudes, longitudes, location, spi, address;
 
@@ -16,8 +34,8 @@ var table;
 
 // my leaflet.js map
 var mymap;
-
-
+var aamarkers=[] ;
+var layerGroup ;
 console.log(aadata[1].meetings[0].day);
 
 
@@ -50,6 +68,11 @@ mon.addEventListener('click', function(e) {
 });
 const tues = document.getElementById('tues');
 tues.addEventListener('click', function(e) {
+//aamarkers.forEach(function(aamarkers, i){
+  //aamarkers.off();
+  layerGroup.clearLayers();
+//});
+
 
 });
 const wes = document.getElementById('wes');
@@ -75,31 +98,6 @@ sund.addEventListener('click', function(e) {
 
 
 
-
-
-var daycheck=[ "Monday", "Tuesday","Wednesday","Thursday", "Friday", "Saturday", "Sunday"];
-
-
-function submitSearch(aadata){
-
- // mymap.removeFrom(map);
-  //aadata=aadata1;
-  // var x = document.getElementById("dayinfo").value;
-  mymap.off();
-  mymap.remove();
-
-  // mymap.eachLayer(function (layer) {
-  //     mymap.clearLayer(layer);
-  // });
-  //mymap.leafletMap.remove();
-      //  this.leafletMap = null;
-
-
- setupMap();
-
-};
-
-
 function setupMap(){
 
 
@@ -110,7 +108,7 @@ function setupMap(){
         center: [51.505, 0.09],
         //inertia: true
       })//.setView([0, 0], 1);
-      .setView([40.734636,-73.994997], 13);
+      .setView([40.743816, -74.002386], 12.9);
 
       // var southWest = L.latLng(-90, -200),
       // northEast = L.latLng(90, 190);
@@ -141,7 +139,7 @@ function setupMap(){
 	   // subdomains: 'abcd',
 	   // maxZoom: 19,
 
-      minZoom:1,
+      minZoom:7,
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoicmFuZGFuZngiLCJhIjoiY2pwaXdqeHU1MDBtNTNxdGU5bmthMGw0YyJ9.XUsxpyY7bNWN0XUzrpAtxg',
 
@@ -149,12 +147,12 @@ function setupMap(){
 
 
     }).addTo(mymap);
-
+    layerGroup = L.layerGroup().addTo(mymap);
     // call our function (defined below) that populates the maps with markers based on the table contents
     //drawDataPoints();
-    drawMarker();
-    // controller = L.control.layers(baseMaps, overlayData, {position:"bottomright"}).addTo(map);
 
+    // controller = L.control.layers(baseMaps, overlayData, {position:"bottomright"}).addTo(map);
+drawMarker();
 }
 
 function drawMarker(){
@@ -172,7 +170,7 @@ function drawMarker(){
 
 
 for(var i=0; i<aadata.length; i++){
-  var aamarkers = L.marker([aadata[i].lat ,aadata[i].lng ], {icon: myicon});
+  aamarkers = L.marker([aadata[i].lat ,aadata[i].lng ], {icon: myicon}).addTo(layerGroup);
   var aaday="Meeting Info: <br>";
   var aalocation='', spaain='';
    if(aadata[i].location== "null"){
