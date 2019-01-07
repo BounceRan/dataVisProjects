@@ -1,7 +1,7 @@
 
 
 var startTime=[], endTime=[];
-var dayinfo=[];
+var dayinfo=[],yearinfo=[];
 var daytimeStart=[], daytimeEnd=[];
 var periodGroup =[];
 var forday, testp;
@@ -14,16 +14,11 @@ getDay();
 
 function setup(){
 
-  createCanvas(windowWidth,(dayinfo.length+1)*30+100);
-
-
-
-
-
+createCanvas(windowWidth,(dayinfo.length+1)*30+100);
 
 forday= new lineForDay();
 
-
+//study moment functions
 // console.log(moment(startTime[0]).format('x'));
 // console.log(moment(startTime[0]).format('X'));
 // console.log(moment(startTime[0]).get('date'));
@@ -40,24 +35,19 @@ forday= new lineForDay();
 
 testp= new lineForPeriod(0,0);
 
-// for(var cP=0; cP<startTime.lentgh; cP++){
-//       for(var cD=0; cD<daytimeStart.length; cD++){
-//         if(index< startTime.length){
-//             if(startTime[cP]>daytimeStart[cD] && endTime[cP]<daytimeEnd[cD]){
-//               periodGroup[index++]= new lineForPeriod(cP,tempDay);
-//             }
-//           }
-//   }
 
 var index=0;
 var tempDay=0;
+    //console.log(moment.duration(endTime[0].diff(startTime[0])).asHours());
 
-for(var a =0 ; a<daytimeStart.length;a++){
+for(var a =0 ; a<daytimeStart.length; a++){
   var minuteOneDay=0;
   for (var i=0; i< startTime.length; i++){
-      if(startTime[i]>daytimeStart[a] && endTime[i]<daytimeEnd[a]){
-          minuteOneDay+=moment.duration(endTime[i].diff(startTime[i])).asHours();
 
+      if(startTime[i]._d>daytimeStart[a]._d && endTime[i]._d<daytimeEnd[a]._d){
+          minuteOneDay+=moment.duration(endTime[i].diff(startTime[i])).asHours();
+        //  debugger;
+      //  console.log(minuteOneDay);
         if(index<startTime.length){
           periodGroup[index++]= new lineForPeriod(i,a);
         }
@@ -66,9 +56,12 @@ for(var a =0 ; a<daytimeStart.length;a++){
   }
   totalMin.push(minuteOneDay);
 }
-//console.log(totalMin);
+
+
 
 countAvHours();
+
+
 
 };
 //};
@@ -79,14 +72,13 @@ countAvHours();
  function draw(){
 
 background('#e4dfdf');
-  forday.display();
-  //testp.display();
-
+//draw lines for days
+forday.display();
+//testp.display();
 
       for (var i=0; i<periodGroup.length;i++){
         periodGroup[i].display();
     }
-
 
 };
 
@@ -130,7 +122,7 @@ function seperatedata(){
 
 
 
-//function which get how many day I have.
+//function which get how many day I have, and which year it is.
 function getDay(){
  var currentday=0, previousDay=0;
 
@@ -141,7 +133,7 @@ for(var i=0; i < startTime.length; i++ ){
   previousDay = moment(startTime[i-1]).dayOfYear();
 
     if(currentday!=previousDay){
-
+      yearinfo.push(moment(startTime[i]).year());
       dayinfo.push(moment(startTime[i]).dayOfYear());
     }
 }
@@ -150,7 +142,7 @@ for(var i=0; i < startTime.length; i++ ){
 }
 
 
-
+//function for siting period
 function lineForPeriod(startt,dayY){
 
   var x1=map(Number(startTime[startt]-daytimeStart[dayY]), 0 , daytimeEnd[dayY]-daytimeStart[dayY], 0.1*windowWidth,(windowWidth-0.1*windowWidth));
@@ -176,7 +168,7 @@ if(mouseY> 0.1*yheight+dayY*30-10&& mouseY<0.1*yheight+dayY*30+10){
 stroke('#f20247');
 line(x1,0.1*yheight+dayY*30,x2,0.1*yheight+dayY*30);
 
-  };
+  }
 };
 
 
@@ -189,10 +181,10 @@ line(x1,0.1*yheight+dayY*30,x2,0.1*yheight+dayY*30);
 function lineForDay(){
 
 for (var i=0; i<dayinfo.length; i++){
-daytimeStart.push( moment().dayOfYear(dayinfo[i]).set({'hour': 6, 'minute':0,'second':0}));
-daytimeEnd.push( moment().dayOfYear(dayinfo[i]).set({'hour': 6, 'minute':0,'second':0}).add(1,'day'))
+daytimeStart.push( moment().dayOfYear(dayinfo[i]).set({'year': yearinfo[i],'hour': 6, 'minute':0,'second':0}));
+daytimeEnd.push( moment().dayOfYear(dayinfo[i]).set({'year': yearinfo[i],'hour': 6, 'minute':0,'second':0}).add(1,'day'))
 }
-//console.log(dayinfo.length);
+//console.log(yearinfo);
 // console.log(daytimeEnd);
 // console.log(daytimeEnd[3]-daytimeStart[3]);
 // console.log(startTime[0]-daytimeStart[0]);
@@ -201,14 +193,7 @@ for(var i=0 ; i<daytimeStart,length; i++){
    daytimeStart[i];
 
 }
-// var sX=(0.1*windowWidth);
-// var eX=(windowWidth-0.1*windowWidth);
 
-  // this.x1 = x1;
-  // this.y1 = y1;
-  // this.x2 = x2;
-  // this.y2 = y2;
-  //
 let x= windowWidth;
 let y= windowHeight;
 
